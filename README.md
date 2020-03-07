@@ -1,4 +1,5 @@
 # basic-image-editor
+<<<<<<< HEAD
 
 ## Project setup
 ```
@@ -22,3 +23,6 @@ npm run lint
 
 ### Customize configuration
 See [Configuration Reference](https://cli.vuejs.org/config/).
+=======
+A coding exam for Audience Republic
+>>>>>>> 7a4758c0800a565225601ada1e2559db632421e3
