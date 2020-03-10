@@ -18,7 +18,7 @@
         <div class="controls__card" id="brightness">
           <div class="controls__header" :style="{color: '#25A95B'}">Brightness</div>
           <div class="controls__slider">
-            <input type="range" min="1" max="100" value="50" class="slider" id="myRange" />
+            <input type="range" min="-100" max="100" value="0" class="slider" id="brightnessRange" @input="updateBrightness" />
           </div>
           <div class="controls__instruction">Slide to adjust image brightness! ☀️</div>
         </div>
@@ -26,22 +26,24 @@
         <div class="controls__card" id="contrast">
           <div class="controls__header" :style="{color: '#4A90E2'}">Contrast</div>
           <div class="controls__slider">
-            <input type="range" min="1" max="100" value="50" class="slider" id="myRange" />
+            <input type="range" min="-100" max="100" value="0" class="slider" id="contrastRange" @input="updateContrast" />
           </div>
           <div class="controls__instruction">Slide to adjust image contrast! 🌓</div>
         </div>
+
       </div>
 
       <div class="upload-card">
-        <div class="upload__photo">
+        <div class="upload__photo" ref="photoCard">
+          <!-- <img ref="img"  /> -->
           <img :src="image" />
 
-          <canvas id="Canvas" class="upload-canvas"></canvas>
           <!-- <img src="../assets/pleasure-garden-1200-by-768.jpg" /> -->
         </div>
 
         <div class="upload__action">
-          <input type="file" name="up" @change="onFileChange" ref="fileInput" style="display: none" />
+
+      <input type="file" name="up" @change="onFileChange" ref="fileInput" style="display: none" />
           <div class="upload__name-wrapper">
             <div class="upload__label">
               Name
@@ -56,42 +58,13 @@
           </div>
         </div>
       </div>
+          
     </div>
-
-  <!--<h1>{{ msg }}</h1>
-  <p>
-    For a guide and recipes on how to configure / customize this project,<br>
-    check out the
-    <a href="https://cli.vuejs.org" target="_blank" rel="noopener">vue-cli documentation</a>.
-  </p>
-  <h3>Installed CLI Plugins</h3>
-  <ul>
-    <li><a href="https://github.com/vuejs/vue-cli/tree/dev/packages/%40vue/cli-plugin-babel" target="_blank" rel="noopener">babel</a></li>
-    <li><a href="https://github.com/vuejs/vue-cli/tree/dev/packages/%40vue/cli-plugin-eslint" target="_blank" rel="noopener">eslint</a></li>
-  </ul>
-  <h3>Essential Links</h3>
-  <ul>
-    <li><a href="https://vuejs.org" target="_blank" rel="noopener">Core Docs</a></li>
-    <li><a href="https://forum.vuejs.org" target="_blank" rel="noopener">Forum</a></li>
-    <li><a href="https://chat.vuejs.org" target="_blank" rel="noopener">Community Chat</a></li>
-    <li><a href="https://twitter.com/vuejs" target="_blank" rel="noopener">Twitter</a></li>
-    <li><a href="https://news.vuejs.org" target="_blank" rel="noopener">News</a></li>
-  </ul>
-  <h3>Ecosystem</h3>
-  <ul>
-    <li><a href="https://router.vuejs.org" target="_blank" rel="noopener">vue-router</a></li>
-    <li><a href="https://vuex.vuejs.org" target="_blank" rel="noopener">vuex</a></li>
-    <li><a href="https://github.com/vuejs/vue-devtools#vue-devtools" target="_blank" rel="noopener">vue-devtools</a></li>
-    <li><a href="https://vue-loader.vuejs.org" target="_blank" rel="noopener">vue-loader</a></li>
-    <li><a href="https://github.com/vuejs/awesome-vue" target="_blank" rel="noopener">awesome-vue</a></li>
-  </ul>-->
+    <canvas id="imageCanvas" ref="imageCanvas" style="display: none"></canvas>
   </div>
 </template>
 
 <script>
-var canvas;
-var context;
-
 export default {
   name: 'HelloWorld',
   props: {
@@ -100,16 +73,37 @@ export default {
   data: 
     function() {
       return {
+        originalImageData: '',
         image: '',
         filename: '',
+        brightness: 0,
+        contrast: 0,
       }
     },
   methods: {
     onFileChange(e) {
-      var files = e.target.files || e.dataTransfer.files;
-      if (!files.length)
-        return;
+      // var files = e.target.files || e.dataTransfer.files;
+      // if (!files.length)
+      //   return;
+      // this.createImage(files[0]);
+
+      var self = this;
+
+      var  files = e.target.files; //reader,
+
+      var reader = new FileReader();
       this.createImage(files[0]);
+
+      reader.onload = () => {
+        var img = new Image();
+        img.onload = function() {
+          self.drawCanvasImage(img)
+          // self.applyFilters(img)
+        }
+        img.src = event.target.result;
+      };
+
+      reader.readAsDataURL(files[0]);
     },
     createImage(file) {
       var reader = new FileReader();
@@ -118,14 +112,94 @@ export default {
       reader.onload = (e) => {
         vm.image = e.target.result;
         vm.filename = file.name;
-        // console.log(file)
       };
       reader.readAsDataURL(file);
     },
-    removeImage: function () {
-      this.image = '';
+    drawCanvasImage(img) {
+      var canvas = this.$refs.imageCanvas;
+      var container = this.$refs.photoCard;
+      var yOffset = 0
+
+      canvas.width = container.clientWidth;
+      canvas.height = canvas.width * img.height / img.width;
+
+      if (canvas.height > container.clientHeight) {
+        var clientHeightMidpoint = container.clientHeight / 2
+        var imageHeightMidpoint = canvas.height / 2
+
+        yOffset = (imageHeightMidpoint - clientHeightMidpoint) / 2
+      }
+
+      var ctx = canvas.getContext('2d');
+      ctx.drawImage(img, 0, -yOffset, canvas.width, canvas.height);
+
+      var imgData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+
+      ctx.putImageData(imgData, 0, 0);
+      
+      this.originalImageData = imgData
+      this.image = canvas.toDataURL("image/png");
+    },
+
+    updateBrightness (e) {
+      var val = (e.target.valueAsNumber + 100) / 200
+      document.getElementById('brightnessRange').style.backgroundImage = '-webkit-gradient(linear, left top, right top, ' +
+        'color-stop(' + val + ', #25A95B), ' + 'color-stop(' + val + ', #c8e9d6)' + ')'
+
+      this.brightness = e.target.valueAsNumber
+      this.applyFilters()
+    },
+
+    updateContrast (e) {
+      var val = (e.target.valueAsNumber + 100) / 200
+      document.getElementById('contrastRange').style.backgroundImage = '-webkit-gradient(linear, left top, right top, ' +
+        'color-stop(' + val + ', #4A90E2), ' + 'color-stop(' + val + ', #c8dbe9)' + ')'
+
+      this.contrast = e.target.valueAsNumber
+      this.applyFilters()
+    },
+
+    applyFilters () {
+      var canvas = this.$refs.imageCanvas;
+      var ctx = canvas.getContext('2d');
+      
+      var imgData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+
+      this.applyBrightness(imgData, this.originalImageData.data, this.brightness);
+      this.applyContrast(imgData, this.contrast);
+
+      ctx.putImageData(imgData, 0, 0);
+      this.image = canvas.toDataURL("image/png");
+    },
+
+    applyBrightness(data, originalData, brightness) {
+      for (var i = 0; i < data.data.length; i+= 4) {
+        data.data[i] = originalData[i] + 255 * (brightness / 100);
+        data.data[i+1] = originalData[i+1] + 255 * (brightness / 100);
+        data.data[i+2] = originalData[i+2] + 255 * (brightness / 100);
+      }
+    },
+
+    applyContrast(data, contrast) {
+      var factor = (259.0 * (contrast + 255.0)) / (255.0 * (259.0 - contrast));
+
+      for (var i = 0; i < data.data.length; i+= 4) {
+        data.data[i] = this.truncateColor(factor * (data.data[i] - 128.0) + 128.0);
+        data.data[i+1] = this.truncateColor(factor * (data.data[i+1] - 128.0) + 128.0);
+        data.data[i+2] = this.truncateColor(factor * (data.data[i+2] - 128.0) + 128.0);
+      }
+    },
+
+    truncateColor(value) {
+      if (value < 0) {
+        value = 0;
+      } else if (value > 255) {
+        value = 255;
+      }
+
+      return value;
     }
-  }
+  },
 }
 </script>
 
@@ -158,7 +232,6 @@ export default {
 }
 
 .header__img {
-  /* width: 100%; */
   height: 100%;
   width: auto;
   background-size: cover;
@@ -201,6 +274,7 @@ export default {
   height: 5px;
   border-radius: 5px;
   margin: 10px 0 10px 0;
+  background-color: #000;
 }
 
 .controls__slider .slider::-webkit-slider-thumb {
@@ -214,29 +288,32 @@ export default {
   box-sizing: content-box;
 }
 
-.controls__slider .slider::-moz-range-thumb {
-  width: 15px;
-  height: 15px;
-  border-radius: 50%;
-  cursor: pointer;
-  border: 3px solid #FFFFFF;
-  box-sizing: content-box;
-}
-
 #brightness .controls__slider .slider {
-  background: #4CAF50;
+  background-image: -webkit-gradient(
+    linear,
+    left top,
+    right top,
+    color-stop(0.5, #25A95B),
+    color-stop(0.5, #c8e9d6)
+  );
 }
 
 #brightness .controls__slider .slider::-webkit-slider-thumb {
-  background: #4CAF50;
+  background: #25A95B;
 }
 
 #brightness .controls__slider .slider::-moz-range-thumb {
-  background: #4CAF50;
+  background: #25A95B;
 }
 
 #contrast .controls__slider .slider {
-  background: #4A90E2;
+  background-image: -webkit-gradient(
+    linear,
+    left top,
+    right top,
+    color-stop(0.5, #4A90E2),
+    color-stop(0.5, #c8dbe9)
+  );
 }
 
 #contrast .controls__slider .slider::-webkit-slider-thumb {
@@ -245,8 +322,7 @@ export default {
 
 #contrast .controls__slider .slider::-moz-range-thumb {
   background: #4A90E2;
-}
-
+} 
 
 .controls__header {
   font-weight: 500;
@@ -272,18 +348,17 @@ export default {
 
 .upload__photo {
   height: 212px;
-  /* object-fit: cover;
-  width: calc(100vw - 40px); */
 }
 
 .upload__photo img {
-  /* width: 100%; */
+  width: 100%;
   height: 100%;
   object-fit: cover;
   width: calc(100vw - 40px);
   border-top-left-radius: 5px;
   border-top-right-radius: 5px;
 }
+
 
 .upload__action {
   display: flex;
@@ -349,11 +424,14 @@ export default {
 
 
 .upload__button button {
+   -webkit-appearance: none;
   font-size: 12px;
   letter-spacing: 0.55px;
   font-weight: 500;
   text-transform: uppercase;
   color: #4A90E2;
+  background-color: transparent;
+  border: 0px;
 
 }
 
