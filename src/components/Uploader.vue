@@ -51,28 +51,22 @@ export default {
   },
   methods: {
     onFileChange(e) {
-      var self = this;
 
       var  files = e.target.files;
 
-      var reader = new FileReader();
       this.createImage(files[0]);
-
-      reader.onload = () => {
-        var img = new Image();
-        img.onload = function() {
-          self.drawCanvasImage(img)
-        }
-        img.src = event.target.result;
-      };
-
-      reader.readAsDataURL(files[0]);
     },
     createImage(file) {
       var reader = new FileReader();
       var vm = this;
 
       reader.onload = (e) => {
+        var img = new Image();
+        img.onload = function() {
+          vm.drawCanvasImage(img)
+        }
+        img.src = event.target.result;
+
         vm.image = e.target.result;
         vm.filename = file.name;
       };
@@ -84,16 +78,7 @@ export default {
       var yOffset = 0
 
       canvas.width = container.clientWidth;
-
-
       canvas.height = canvas.width * img.height / img.width;
-
-      if (canvas.height > container.clientHeight) {
-        var clientHeightMidpoint = container.clientHeight / 2
-        var imageHeightMidpoint = canvas.height / 2
-
-        yOffset = (imageHeightMidpoint - clientHeightMidpoint) / 2
-      }
 
       var ctx = canvas.getContext('2d');
       ctx.drawImage(img, 0, -yOffset, canvas.width, canvas.height);
@@ -104,12 +89,7 @@ export default {
       
       this.originalImageData = imgData
       this.image = canvas.toDataURL("image/png");
-
-      // console.log("i'm updating disabled", this.updateDisabled)
-
-      // this.updateDisabled(false)
       this.$emit('updateDisabled', false)
-
     },
 
     applyFilters () {
