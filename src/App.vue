@@ -28,6 +28,22 @@ export default {
 </script>
 
 <style>
+@font-face {
+  font-family: 'Graphik';
+  src:  url('./assets/fonts/Graphik-Medium.woff2') format('woff2'),
+        url('./assets/fonts/Graphik-Medium.woff') format('woff');
+  font-weight: 500;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Graphik';
+  src:  url('./assets/fonts/Graphik-Regular.woff2') format('woff2'),
+        url('./assets/fonts/Graphik-Regular.woff') format('woff');
+  font-weight: 400;
+  font-style: normal;
+}
+
 body {
   margin: 0px;
 }
