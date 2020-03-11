@@ -1,5 +1,4 @@
 # basic-image-editor
-<<<<<<< HEAD
 
 ## Project setup
 ```
