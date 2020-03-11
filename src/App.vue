@@ -86,7 +86,7 @@ body {
   height: 100%;
   width: auto;
   background-size: cover;
-  background-image: linear-gradient( rgba(255, 255, 255, 0) 80%, rgba(102, 102, 102, 1) 100%) , url('./assets/pleasure-garden-1200-by-768.jpg');
+  background-image: linear-gradient( rgba(255, 255, 255, 0) 80%, rgba(102, 102, 102, 1) 100%) , url('./assets/beyond-the-valley.png');
   background-repeat: no-repeat;
   background-position: center;
 }
