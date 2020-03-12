@@ -47,8 +47,8 @@ export default {
         brightness: 0,
         contrast: 0,
         disabled: true,
-        brightnessColorStop: "50%",
-        contrastColorStop: "50%"
+        brightnessColorStop: "0.50",
+        contrastColorStop: "0.50"
       }
     },
   methods: {
@@ -56,11 +56,11 @@ export default {
       this.disabled = value;
     },
     updateBrightness (e) {
-      this.brightnessColorStop = (((e.target.valueAsNumber + 100) / 200) * 100) + "%";
+      this.brightnessColorStop = "" + ((e.target.valueAsNumber + 100) / 200) + "";
       this.brightness = e.target.valueAsNumber;
     },
     updateContrast (e) {
-      this.contrastColorStop = (((e.target.valueAsNumber + 100) / 200) * 100) + "%";
+      this.contrastColorStop = "" + ((e.target.valueAsNumber + 100) / 200) + "";
       this.contrast = e.target.valueAsNumber;
     },
   }
