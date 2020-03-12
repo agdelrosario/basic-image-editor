@@ -2,7 +2,16 @@
   <div class="controls__card" v-bind:id="id">
     <div class="controls__header">{{ name }}</div>
     <div class="controls__slider">
-      <input type="range" min="-100" max="100" value="0" class="slider" v-bind:id="id + 'Range'" @input="update" v-bind:disabled="disabled" />
+      <input
+        type="range"
+        min="-100"
+        max="100"
+        value="0"
+        class="slider"
+        v-bind:id="id + 'Range'"
+        @input="update"
+        v-bind:disabled="disabled"
+        v-bind:style="cssVars" />
     </div>
     <div class="controls__instruction">{{ message }}</div>
   </div>
@@ -16,8 +25,20 @@ export default {
     name: String,
     message: String,
     update: { type: Function },
-    disabled: Boolean
+    disabled: Boolean,
+    colorStop: String,
+    highlightColor: String,
+    trackColor: String
   },
+  computed: {
+    cssVars() {
+      return {
+        '--highlight-color': this.highlightColor,
+        '--track-color': this.trackColor,
+        'background-image': '-webkit-gradient(linear, left top, right top, color-stop(' + this.colorStop + ', ' + this.highlightColor + '), color-stop(' + this.colorStop + ', ' + this.trackColor + '))'
+      }
+    }
+  }
 }
 </script>
 
@@ -62,47 +83,25 @@ export default {
   box-sizing: content-box;
 }
 
-#brightness .controls__slider .slider {
+.controls__slider .slider {
   background-image: -webkit-gradient(
     linear,
     left top,
     right top,
-    color-stop(0.5, #25A95B),
-    color-stop(0.5, #c8e9d6)
+    color-stop(0.5, var(--highlight-color)),
+    color-stop(0.5, var(--track-color))
   );
 }
 
-#brightness .controls__header {
-  color: #25A95B;
+.controls__header {
+  color: var(--highlight-color);
 }
 
-#brightness .controls__slider .slider::-webkit-slider-thumb {
-  background: #25A95B;
+.controls__slider .slider::-webkit-slider-thumb {
+  background: var(--highlight-color);
 }
 
-#brightness .controls__slider .slider::-moz-range-thumb {
-  background: #25A95B;
+.controls__slider .slider::-moz-range-thumb {
+  background: var(--highlight-color);
 }
-
-#contrast .controls__slider .slider {
-  background-image: -webkit-gradient(
-    linear,
-    left top,
-    right top,
-    color-stop(0.5, #4A90E2),
-    color-stop(0.5, #c8dbe9)
-  );
-}
-
-#contrast .controls__header {
-  color: #4A90E2;
-}
-
-#contrast .controls__slider .slider::-webkit-slider-thumb {
-  background: #4A90E2;
-}
-
-#contrast .controls__slider .slider::-moz-range-thumb {
-  background: #4A90E2;
-} 
 </style>
