@@ -189,13 +189,15 @@ export default {
   height: 30px;
   display: flex;
   flex-direction: row;
-  width: 61.79%;
-  align-items: center;
-  justify-content: center;
+  width: calc(100% - 100px);
+  margin-right: 24px;
+  /* align-items: center;
+  justify-content: center; */
   font-size: 11px;
   font-weight: 500;
   line-height: 30px;
   text-transform: uppercase;
+  box-sizing: border-box;
 }
 
 .upload__label {
@@ -207,10 +209,11 @@ export default {
   color: #8392A6;
   border-top-left-radius: 3px;
   border-bottom-left-radius: 3px;
+  box-sizing: border-box;
 }
 
 .upload__name {
-  width: 71.01%;
+  width: calc(100% - 60px);
   height: 100%;
   white-space: nowrap;
   overflow: hidden;
@@ -230,6 +233,8 @@ export default {
   justify-content: center;
   background-color: #F6F8FA;
   padding-left: 9px;
+  width: 100px;
+  box-sizing: border-box;
 }
 
 .upload__button button {
