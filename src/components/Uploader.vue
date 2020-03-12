@@ -1,5 +1,5 @@
 <template>
-  <div class="upload-card">
+  <div class="upload">
     <div class="upload__photo" ref="photoCard">
       <!-- <img :src="image" /> -->
       <canvas id="imageCanvas" ref="imageCanvas"></canvas>
@@ -7,17 +7,17 @@
 
     <div class="upload__action">
       <input type="file" name="up" @change="onFileChange" ref="fileInput" style="display: none" />
-      <div class="upload__name-wrapper">
-        <div class="upload__label">
+      <div class="upload__action__name">
+        <div class="upload__action__name-label">
           Name
         </div>
-        <div class="upload__name">
+        <div class="upload__action__name-filename">
           {{filename}}
         </div>
       </div>
-      <div class="upload__button-wrapper" @click="$refs.fileInput.click()">
+      <div class="upload__action__button" @click="$refs.fileInput.click()">
         <img src="../assets/Triangle.svg" />
-        <div class="upload__button">Upload</div>
+        <div class="upload__action__button-label">Upload</div>
       </div>
     </div>
 
@@ -34,7 +34,7 @@ export default {
   },
   data: function() {
     return {
-      filename: 'sljflsdjfkdsjf dksjfldksjf kjskfjksd',
+      filename: '',
       image: '',
       originalImageData: '',
       context: null,
@@ -86,9 +86,9 @@ export default {
     },
     drawCanvasImage(img) {
       let canvas = this.$refs.imageCanvas;
-      var yOffset = 0;
+      let yOffset = 0;
 
-      var newHeight = canvas.width * img.height / img.width;
+      const newHeight = canvas.width * img.height / img.width;
 
       if (newHeight > this.containerHeight) {
         this.canvasHeight = canvas.height = this.containerHeight;
@@ -97,7 +97,7 @@ export default {
         this.canvasHeight = canvas.height = newHeight;
       }
 
-      var ctx = canvas.getContext('2d');
+      let ctx = canvas.getContext('2d');
 
       ctx.drawImage(img, 0, yOffset, this.canvasWidth, newHeight);
 
@@ -153,7 +153,9 @@ export default {
 
 <style lang="scss" scoped>
 
-.upload-card {
+
+
+.upload {
   display: flex;
   flex-direction: column;
   box-sizing: border-box;
@@ -164,20 +166,21 @@ export default {
   background-color: #E7E7E7;
   text-transform: uppercase;
 
-  .upload__photo {
+  &__photo {
     height: 210px;
     display: flex;
     align-items: center;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+    overflow: hidden;
 
     canvas {
       width: 100%;
       object-fit: cover;
-      border-top-left-radius: 5px;
-      border-top-right-radius: 5px;
     }
   }
 
-  .upload__action {
+  &__action {
     display: flex;
     flex-direction: row;
     border: 1px solid #DCDEE4;
@@ -188,22 +191,22 @@ export default {
     padding-top: 20px;
     margin-bottom: 0px;
     background-color: #fff;
+    font-weight: 500;
 
-    .upload__name-wrapper {
+    &__name {
+      display: flex;
+      flex-direction: row;
       border: 1px solid #DCDEE4;
       border-radius: 5px;
       height: 30px;
-      display: flex;
-      flex-direction: row;
       width: calc(100% - 124px);
       margin-right: 24px;
       font-size: 11px;
-      font-weight: 500;
       line-height: 30px;
       text-transform: uppercase;
       box-sizing: border-box;
 
-      .upload__label {
+      &-label {
         letter-spacing: 1.1px;
         width: 60px;
         border-right: 1px solid #DCDEE4;
@@ -217,7 +220,7 @@ export default {
         padding-right: 10px;
       }
 
-      .upload__name {
+      &-filename {
         height: 100%;
         white-space: nowrap;
         overflow: hidden;
@@ -225,16 +228,15 @@ export default {
         padding-left: 10px;
         padding-right: 10px;
         color: #25A95B;
-        box-sizing: border-box;
       }
     }
 
-    .upload__button-wrapper {
+    &__button {
+      display: flex;
+      flex-direction: row;
       border: 1px solid #DCDEE4;
       border-radius: 5px;
       height: 30px;
-      display: flex;
-      flex-direction: row;
       align-items: center;
       justify-content: center;
       background-color: #F6F8FA;
@@ -242,14 +244,11 @@ export default {
       width: 100px;
       box-sizing: border-box;
       
-      .upload__button {
+      &-label {
         font-size: 12px;
         letter-spacing: 0.55px;
-        font-weight: 500;
         text-transform: uppercase;
         color: #4A90E2;
-        background-color: transparent;
-        border: 0px;
         margin-left: 8.7px;
         margin-right: 7.61px;
       }

@@ -1,5 +1,5 @@
 <template>
-  <div class="controls__card" v-bind:id="id">
+  <div class="controls" v-bind:id="id">
     <div class="controls__header" :style="'color: ' + this.highlightColor">{{ name }}</div>
     <div class="controls__slider">
       <input
@@ -7,7 +7,7 @@
         min="-100"
         max="100"
         value="0"
-        class="slider"
+        class="controls__slider-input"
         v-bind:id="id + 'Range'"
         @input="update"
         v-bind:disabled="disabled"
@@ -44,37 +44,41 @@ export default {
 
 <style lang="scss" scoped>
 
-.controls__card {
+$highlight-color: var(--highlight-color);
+$track-color: var(--track-color);
+
+.controls {
   box-sizing: border-box;
+  margin: 0px;
   margin-top: 7px;
   padding: 6px 20px 6px 20px;
   border-radius: 5px;
   box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.10);
 
-  .controls__header {
+  &__header {
     font-weight: 500;
     font-size: 18px;
     line-height: 25px;
   }
 
-  .controls__instruction {
+  &__instruction {
     font-size: 13px;
   }
 
-  .controls__slider {
-    .slider {
+  &__slider {
+    &-input {
       -webkit-appearance: none;  /* Override default CSS styles */
       appearance: none;
       width: 100%;
       height: 5px;
       border-radius: 5px;
-      margin: 10px 0 10px 0;
+      // margin: 10px 0 10px 0;
       background-image: -webkit-gradient(
         linear,
         left top,
         right top,
-        color-stop(0.5, var(--highlight-color)),
-        color-stop(0.5, var(--track-color))
+        color-stop(0.5, $highlight-color),
+        color-stop(0.5, $track-color)
       );
 
       &::-webkit-slider-thumb {
@@ -86,11 +90,11 @@ export default {
         cursor: pointer;
         border: 3px solid #FFFFFF;
         box-sizing: content-box;
-        background: var(--highlight-color);
+        background: $highlight-color;
       }
 
       &::-moz-range-thumb {
-        background: var(--highlight-color);
+        background: $highlight-color;
       }
     }
   }

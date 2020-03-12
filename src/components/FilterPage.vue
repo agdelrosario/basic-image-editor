@@ -1,6 +1,6 @@
 <template>
   <div class="page-content">
-    <div class="controls">
+    <div class="page-content__sliders">
       <Slider
         id="brightness"
         name="Brightness"
@@ -69,7 +69,7 @@ export default {
 
 <style scoped>
 
-.controls {
+.page-content__sliders {
   margin-left: 20px;
   margin-right: 20px;
 }
