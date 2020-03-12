@@ -53,15 +53,15 @@ export default {
     },
   methods: {
     updateDisabled (value) {
-      this.disabled = value
+      this.disabled = value;
     },
     updateBrightness (e) {
-      this.brightnessColorStop = (((e.target.valueAsNumber + 100) / 200) * 100) + "%"
-      this.brightness = e.target.valueAsNumber
+      this.brightnessColorStop = (((e.target.valueAsNumber + 100) / 200) * 100) + "%";
+      this.brightness = e.target.valueAsNumber;
     },
     updateContrast (e) {
-      this.contrastColorStop = (((e.target.valueAsNumber + 100) / 200) * 100) + "%"
-      this.contrast = e.target.valueAsNumber
+      this.contrastColorStop = (((e.target.valueAsNumber + 100) / 200) * 100) + "%";
+      this.contrast = e.target.valueAsNumber;
     },
   }
 }

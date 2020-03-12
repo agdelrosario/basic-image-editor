@@ -14,13 +14,13 @@
           {{filename}}
         </div>
       </div>
-      <div class="upload__button">
+      <div class="upload__button-wrapper" @click="$refs.fileInput.click()">
         <img src="../assets/Triangle.svg" />
-        <button type="button" @click="$refs.fileInput.click()" class="trigger">Upload</button>
+        <div class="upload__button">Upload</div>
       </div>
     </div>
 
-    <canvas id="imageCanvas" ref="imageCanvas" style="display: none"></canvas>
+    <canvas id="imageCanvas" ref="imageCanvas"></canvas>
   </div>
 </template>
 
@@ -51,17 +51,16 @@ export default {
   },
   methods: {
     onFileChange(e) {
-
-      var  files = e.target.files;
+      let files = e.target.files;
 
       this.createImage(files[0]);
     },
     createImage(file) {
-      var reader = new FileReader();
-      var vm = this;
+      let reader = new FileReader();
+      let vm = this;
 
       reader.onload = (e) => {
-        var img = new Image();
+        let img = new Image();
         img.onload = function() {
           vm.drawCanvasImage(img)
         }
@@ -73,30 +72,30 @@ export default {
       reader.readAsDataURL(file);
     },
     drawCanvasImage(img) {
-      var canvas = this.$refs.imageCanvas;
-      var container = this.$refs.photoCard;
-      var yOffset = 0
+      let canvas = this.$refs.imageCanvas;
+      const container = this.$refs.photoCard;
+      let yOffset = 0
 
       canvas.width = container.clientWidth;
       canvas.height = canvas.width * img.height / img.width;
 
-      var ctx = canvas.getContext('2d');
+      let ctx = canvas.getContext('2d');
       ctx.drawImage(img, 0, -yOffset, canvas.width, canvas.height);
 
-      var imgData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+      let imgData = ctx.getImageData(0, 0, canvas.width, canvas.height);
 
       ctx.putImageData(imgData, 0, 0);
       
       this.originalImageData = imgData
-      this.image = canvas.toDataURL("image/png");
+      // this.image = canvas.toDataURL("image/png");
       this.$emit('updateDisabled', false)
     },
 
     applyFilters () {
-      var canvas = this.$refs.imageCanvas;
-      var ctx = canvas.getContext('2d');
+      let canvas = this.$refs.imageCanvas;
+      let ctx = canvas.getContext('2d');
       
-      var imgData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+      let imgData = ctx.getImageData(0, 0, canvas.width, canvas.height);
 
       this.applyBrightness(imgData, this.originalImageData.data, this.brightness);
       this.applyContrast(imgData, this.contrast);
@@ -114,7 +113,7 @@ export default {
     },
 
     applyContrast(data, contrast) {
-      var factor = (259.0 * (contrast + 255.0)) / (255.0 * (259.0 - contrast));
+      const factor = (259.0 * (contrast + 255.0)) / (255.0 * (259.0 - contrast));
 
       for (var i = 0; i < data.data.length; i+= 4) {
         data.data[i] = this.truncateColor(factor * (data.data[i] - 128.0) + 128.0);
@@ -223,7 +222,7 @@ export default {
   color: #25A95B;
 }
 
-.upload__button {
+.upload__button-wrapper {
   border: 1px solid #DCDEE4;
   border-radius: 5px;
   height: 30px;
@@ -237,8 +236,7 @@ export default {
   box-sizing: border-box;
 }
 
-.upload__button button {
-   -webkit-appearance: none;
+.upload__button-wrapper .upload__button {
   font-size: 12px;
   letter-spacing: 0.55px;
   font-weight: 500;
@@ -246,5 +244,7 @@ export default {
   color: #4A90E2;
   background-color: transparent;
   border: 0px;
+  margin-left: 8.7px;
+  margin-right: 7.61px;
 }
 </style>
