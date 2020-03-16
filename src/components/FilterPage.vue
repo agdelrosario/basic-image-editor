@@ -67,11 +67,23 @@ export default {
 }
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 
-.page-content__sliders {
+
+.page-content {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
   margin-left: 20px;
   margin-right: 20px;
+
+  &__sliders {
+    // margin-left: 20px;
+    // margin-right: 20px;
+    width: 100%;
+    max-width: 400px;
+  }
 }
 
 </style>

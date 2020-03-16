@@ -48,6 +48,7 @@ $highlight-color: var(--highlight-color);
 $track-color: var(--track-color);
 
 .controls {
+  width: 100%;
   box-sizing: border-box;
   margin: 0px;
   margin-top: 7px;

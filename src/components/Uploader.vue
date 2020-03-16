@@ -167,6 +167,8 @@ $border: 1px solid $border-color;
   display: flex;
   flex-direction: column;
   box-sizing: border-box;
+  width: 100%;
+  max-width: 400px;
   height: 268px;
   margin: 29px 20px 29px 20px;
   padding-bottom: 0px;
