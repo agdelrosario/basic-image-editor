@@ -1,7 +1,6 @@
 <template>
   <div class="upload">
     <div class="upload__photo" ref="photoCard">
-      <!-- <img :src="image" /> -->
       <canvas id="imageCanvas" ref="imageCanvas"></canvas>
     </div>
 
@@ -19,9 +18,7 @@
         <img src="../assets/Triangle.svg" />
         <div class="upload__action__button-label">Upload</div>
       </div>
-    </div>
-
-    
+    </div>    
   </div>
 </template>
 
@@ -77,7 +74,7 @@ export default {
         img.onload = function() {
           vm.drawCanvasImage(img)
         }
-        img.src = event.target.result;
+        img.src = e.target.result;
 
         vm.image = e.target.result;
         vm.filename = file.name;
@@ -86,6 +83,8 @@ export default {
     },
     drawCanvasImage(img) {
       let canvas = this.$refs.imageCanvas;
+
+      // Crop images that have longer heights than the container
       let yOffset = 0;
 
       const newHeight = canvas.width * img.height / img.width;
@@ -153,7 +152,16 @@ export default {
 
 <style lang="scss" scoped>
 
+$border-color: #DCDEE4;
+$primary-green: #25A95B;
+$primary-blue: #4A90E2;
+$gray-background: #F6F8FA;
+$border: 1px solid $border-color;
 
+@mixin flex-row {
+  display: flex;
+  flex-direction: row;
+}
 
 .upload {
   display: flex;
@@ -167,9 +175,10 @@ export default {
   text-transform: uppercase;
 
   &__photo {
-    height: 210px;
     display: flex;
     align-items: center;
+
+    height: 210px;
     border-top-left-radius: 5px;
     border-top-right-radius: 5px;
     overflow: hidden;
@@ -181,37 +190,34 @@ export default {
   }
 
   &__action {
-    display: flex;
-    flex-direction: row;
-    border: 1px solid #DCDEE4;
+    @include flex-row;
+    border: $border;
     border-top: 0px;
     border-bottom-left-radius: 5px;
     border-bottom-right-radius: 5px;
     padding: 7px;
     padding-top: 20px;
     margin-bottom: 0px;
-    background-color: #fff;
+    background-color: #FFFFFF;
     font-weight: 500;
 
     &__name {
-      display: flex;
-      flex-direction: row;
-      border: 1px solid #DCDEE4;
+      @include flex-row;
+      border: $border;
       border-radius: 5px;
       height: 30px;
       width: calc(100% - 124px);
       margin-right: 24px;
       font-size: 11px;
       line-height: 30px;
-      text-transform: uppercase;
       box-sizing: border-box;
 
       &-label {
         letter-spacing: 1.1px;
         width: 60px;
-        border-right: 1px solid #DCDEE4;
+        border-right: $border;
         height: 100%;
-        background-color: #F6F8FA;
+        background-color: $gray-background;
         color: #8392A6;
         border-top-left-radius: 3px;
         border-bottom-left-radius: 3px;
@@ -227,28 +233,29 @@ export default {
         text-overflow: ellipsis;
         padding-left: 10px;
         padding-right: 10px;
-        color: #25A95B;
+        color: $primary-green;
       }
     }
 
     &__button {
-      display: flex;
-      flex-direction: row;
-      border: 1px solid #DCDEE4;
-      border-radius: 5px;
-      height: 30px;
+      @include flex-row;
       align-items: center;
       justify-content: center;
-      background-color: #F6F8FA;
-      padding-left: 9px;
+
       width: 100px;
+      height: 30px;
+
       box-sizing: border-box;
+
+      border: $border;
+      border-radius: 5px;
+      background-color: $gray-background;
+      padding-left: 9px;
       
       &-label {
         font-size: 12px;
         letter-spacing: 0.55px;
-        text-transform: uppercase;
-        color: #4A90E2;
+        color: $primary-blue;
         margin-left: 8.7px;
         margin-right: 7.61px;
       }

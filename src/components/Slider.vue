@@ -72,7 +72,8 @@ $track-color: var(--track-color);
       width: 100%;
       height: 5px;
       border-radius: 5px;
-      // margin: 10px 0 10px 0;
+      margin: 10px 0 10px 0;
+      border: 3px solid #FFFFFF;
       background-image: -webkit-gradient(
         linear,
         left top,
@@ -81,20 +82,24 @@ $track-color: var(--track-color);
         color-stop(0.5, $track-color)
       );
 
-      &::-webkit-slider-thumb {
-        -webkit-appearance: none;
-        appearance: none;
-        width: 15px;
-        height: 15px;
+      @mixin slider-thumb {
         border-radius: 50%; 
         cursor: pointer;
         border: 3px solid #FFFFFF;
         box-sizing: content-box;
         background: $highlight-color;
+        width: 15px;
+        height: 15px;
+      }
+
+      &::-webkit-slider-thumb {
+        @include slider-thumb;
+        -webkit-appearance: none;
       }
 
       &::-moz-range-thumb {
-        background: $highlight-color;
+        @include slider-thumb;
+        appearance: none;
       }
     }
   }
