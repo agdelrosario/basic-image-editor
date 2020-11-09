@@ -55,9 +55,6 @@ export default {
     const container = this.$refs.photoCard;
     this.canvasWidth = canvas.width = container.clientWidth;
     this.containerHeight = this.canvasHeight = canvas.height = container.clientHeight;
-
-    console.log("this.canvasWidth", this.canvasWidth)
-    
   },
   methods: {
     onFileChange(e) {
@@ -110,7 +107,7 @@ export default {
     },
 
     applyFilters () {
-      let imgData = this.context.getImageData(0, 0, this.canvasWidth, this.canvasHeight);
+      const imgData = this.context.getImageData(0, 0, this.canvasWidth, this.canvasHeight);
 
       this.applyBrightness(imgData, this.originalImageData.data, this.brightness);
       this.applyContrast(imgData, this.contrast);
